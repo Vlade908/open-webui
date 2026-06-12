@@ -1300,7 +1300,7 @@
 							<div class="flex items-center justify-between gap-3 flex-wrap">
 								<!-- Left: Model Selector -->
 								<div class="flex items-center gap-2 bg-white/5 dark:bg-[#0d0e12]/30 border border-gray-250/10 dark:border-gray-800/20 rounded-2xl px-2 py-0.5 backdrop-blur-md">
-									<ModelSelector bind:selectedModels showSetDefault={false} />
+									<ModelSelector bind:selectedModels showSetDefault={false} placement="top" />
 								</div>
 								
 								<!-- Right: Manage Skills link -->

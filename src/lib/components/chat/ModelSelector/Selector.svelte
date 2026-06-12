@@ -59,6 +59,7 @@
 	export let triggerClassName = 'text-lg';
 
 	export let pinModelHandler: (modelId: string) => void = () => {};
+	export let placement: 'top' | 'bottom' = 'bottom';
 
 	let tagsContainerElement;
 
@@ -79,19 +80,31 @@
 	const updatePosition = () => {
 		if (!show || !triggerElement) return;
 		const rect = triggerElement.getBoundingClientRect();
+		
+		let top = rect.bottom + 2;
+		if (placement === 'top' && contentElement) {
+			const contentHeight = contentElement.getBoundingClientRect().height;
+			top = rect.top - contentHeight - 6;
+		}
+
 		dropdownPosition = {
-			top: rect.bottom + 2,
+			top: top,
 			left: $mobile ? 8 : rect.left,
 			width: $mobile ? window.innerWidth - 16 : 0
 		};
 	};
 
-	const toggleOpen = () => {
+	$: if (show && filteredItems) {
+		tick().then(updatePosition);
+	}
+
+	const toggleOpen = async () => {
 		show = !show;
 		if (show) {
 			searchValue = '';
 			listScrollTop = 0;
 			resetView();
+			await tick();
 			updatePosition();
 			window.setTimeout(() => document.getElementById('model-search-input')?.focus(), 0);
 		} else {

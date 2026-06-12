@@ -373,11 +373,32 @@ div.z-50.dark\:bg-gray-850 {
         0 0 25px rgba(139, 92, 246, 0.08) !important;
     color: #f1f5f9 !important;
     padding: 0.5rem !important;
-    transform: translate(calc((var(--mouse-x, 50%) - 50%) * 0.15px), calc((var(--mouse-y, 50%) - 50%) * 0.15px)) !important;
+    /* transform removed to prevent breaking Svelte portal positioning/transitions */
     transition: 
-        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
         box-shadow 0.25s ease, 
         border-color 0.25s ease !important;
+}
+
+/* Ensure nested elements inside dropdowns/popovers don't get the global solid background override */
+div.z-40.bg-white div,
+div.z-40.dark\:bg-gray-850 div,
+div.z-50.bg-white div,
+div.z-50.dark\:bg-gray-850 div {
+    background-color: transparent !important;
+}
+
+/* Specific highlight background for selected model item in list */
+div.z-40 button[role="option"][data-arrow-selected="true"],
+div.z-40 button[role="option"][aria-selected="true"] {
+    background: rgba(139, 92, 246, 0.25) !important;
+    color: #ffffff !important;
+}
+
+/* Ensure listbox container has correct max-height and scrolling */
+div.z-40 [role="listbox"] {
+    max-height: 256px !important;
+    overflow-y: auto !important;
 }
 
 /* Hover over Popups / Dropdown box */
@@ -386,7 +407,6 @@ div.z-40.dark\:bg-gray-850:hover,
 div.z-50.bg-white:hover,
 div.z-50.dark\:bg-gray-850:hover {
     border-color: rgba(168, 85, 247, 0.25) !important;
-    transform: translate(calc((var(--mouse-x, 50%) - 50%) * 0.15px), calc((var(--mouse-y, 50%) - 50%) * 0.15px)) scale(1.01) !important;
     box-shadow: 
         0 25px 60px rgba(0, 0, 0, 0.7), 
         0 0 35px rgba(139, 92, 246, 0.15) !important;
@@ -1115,7 +1135,6 @@ nav.drag-region a:not([aria-current="page"]):hover {
     color: #67e8f9 !important;
 }
 
-.dark .hljs-variable,
 .dark .hljs-template-variable {
     color: #f0abfc !important;
 }
@@ -1123,3 +1142,173 @@ nav.drag-region a:not([aria-current="page"]):hover {
 .dark .hljs-params {
     color: #fdba74 !important;
 }
+
+/* ==========================================================================
+   INOVIA AI PORTAL - ADMIN PANEL STYLING & GLASSMORPHISM
+   ========================================================================== */
+
+/* --- TOP LEVEL ADMIN TABS --- */
+nav.drag-region div.flex.gap-1.scrollbar-none.overflow-x-auto.w-fit {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 9999px !important;
+    padding: 3px 6px !important;
+    margin-bottom: 8px !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+nav.drag-region div.flex.gap-1.scrollbar-none.overflow-x-auto.w-fit a {
+    color: rgba(255, 255, 255, 0.45) !important;
+    padding: 6px 16px !important;
+    font-weight: 500 !important;
+    border-radius: 9999px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+nav.drag-region div.flex.gap-1.scrollbar-none.overflow-x-auto.w-fit a:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    transform: none !important;
+}
+
+/* Top Tab Active Feedback style */
+nav.drag-region div.flex.gap-1.scrollbar-none.overflow-x-auto.w-fit a.active {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.22) 0%, rgba(99, 102, 241, 0.22) 100%) !important;
+    border: 1px solid rgba(168, 85, 247, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 0 15px rgba(168, 85, 247, 0.2),
+        inset 0 0 8px rgba(168, 85, 247, 0.1) !important;
+    font-weight: 600 !important;
+}
+
+/* --- ADMIN SUB-NAVIGATION SIDEBAR TABS (Users, Evaluations, Settings) --- */
+#users-tabs-container a,
+#admin-settings-tabs-container a {
+    color: rgba(255, 255, 255, 0.45) !important;
+    padding: 0.6rem 1.1rem !important;
+    border-radius: 0.75rem !important;
+    border: 1px solid transparent !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#users-tabs-container a:hover,
+#admin-settings-tabs-container a:hover {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: #ffffff !important;
+    transform: translateX(4px) !important;
+}
+
+/* Sub-nav active state feedback */
+#users-tabs-container a.active,
+#admin-settings-tabs-container a.active {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%) !important;
+    border: 1px solid rgba(168, 85, 247, 0.28) !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 4px 15px rgba(168, 85, 247, 0.06),
+        inset 0 0 8px rgba(168, 85, 247, 0.04) !important;
+    transform: translateX(6px) !important;
+    font-weight: 600 !important;
+}
+
+/* Horizontal scroll adjustment for smaller screens */
+@media (max-width: 1023px) {
+    #users-tabs-container a.active,
+    #admin-settings-tabs-container a.active,
+    #users-tabs-container a:hover,
+    #admin-settings-tabs-container a:hover {
+        transform: translateY(-2px) !important;
+    }
+}
+
+/* --- PREMIUM GLASS PANELS FOR CONTENT AREAS --- */
+/* Target the main content areas */
+div.pb-1.flex-1.max-h-full.overflow-y-auto div.flex-col.lg\:flex-row > div.flex-1,
+div.pb-1.flex-1.max-h-full.overflow-y-auto div.py-2.bg-white.dark\:bg-gray-900.rounded-3xl,
+div.pb-1.flex-1.max-h-full.overflow-y-auto > div.w-full > div.w-full {
+    background: rgba(8, 6, 20, 0.45) !important;
+    backdrop-filter: blur(24px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 1.5rem !important;
+    padding: 1.25rem !important;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.65), 
+        0 0 20px rgba(139, 92, 246, 0.03) !important;
+}
+
+/* Fix background for secondary interior items */
+div.pb-1.flex-1.max-h-full.overflow-y-auto div.py-2.bg-white.dark\:bg-gray-900.rounded-3xl div {
+    background-color: transparent !important;
+}
+
+/* Premium styled tables inside Admin panel */
+div.pb-1.flex-1.max-h-full.overflow-y-auto table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 6px !important;
+}
+
+div.pb-1.flex-1.max-h-full.overflow-y-auto th {
+    color: rgba(192, 132, 252, 0.8) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-size: 0.75rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 10px 8px !important;
+    text-align: left !important;
+}
+
+div.pb-1.flex-1.max-h-full.overflow-y-auto tr {
+    background: rgba(255, 255, 255, 0.01) !important;
+    border-radius: 0.75rem !important;
+    transition: all 0.2s ease !important;
+}
+
+div.pb-1.flex-1.max-h-full.overflow-y-auto tr:hover {
+    background: rgba(139, 92, 246, 0.06) !important;
+    box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.03) !important;
+}
+
+div.pb-1.flex-1.max-h-full.overflow-y-auto td {
+    padding: 10px 8px !important;
+    color: #e2e8f0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.02) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02) !important;
+}
+
+div.pb-1.flex-1.max-h-full.overflow-y-auto td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.02) !important;
+    border-radius: 0.75rem 0 0 0.75rem !important;
+}
+
+div.pb-1.flex-1.max-h-full.overflow-y-auto td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.02) !important;
+    border-radius: 0 0.75rem 0.75rem 0 !important;
+}
+
+/* User Badge/Role label inside list */
+.dark span.bg-blue-500\/20,
+.dark span[class*="bg-blue-"] {
+    background: rgba(139, 92, 246, 0.15) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    color: #c084fc !important;
+}
+
+/* Input boxes in admin panel (Search filters) */
+div.pb-1.flex-1.max-h-full.overflow-y-auto input {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0.75rem !important;
+    padding: 0.4rem 0.75rem !important;
+    color: #ffffff !important;
+    transition: all 0.2s ease !important;
+}
+
+div.pb-1.flex-1.max-h-full.overflow-y-auto input:focus {
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2) !important;
+}
+

@@ -60,7 +60,7 @@
 				draggable="false"
 				class="px-0.5 py-1 min-w-fit rounded-lg lg:flex-none flex text-right transition select-none {selectedTab ===
 				'leaderboard'
-					? ''
+					? 'active'
 					: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			>
 				<div class=" self-center mr-2">
@@ -86,7 +86,7 @@
 				draggable="false"
 				class="px-0.5 py-1 min-w-fit rounded-lg lg:flex-none flex text-right transition select-none {selectedTab ===
 				'feedback'
-					? ''
+					? 'active'
 					: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
 			>
 				<div class=" self-center mr-2">

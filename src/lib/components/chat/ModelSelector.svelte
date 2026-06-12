@@ -13,6 +13,7 @@
 	export let disabled = false;
 
 	export let showSetDefault = true;
+	export let placement: 'top' | 'bottom' = 'bottom';
 
 	const saveDefaultModel = async () => {
 		const hasEmptyModel = selectedModels.filter((it) => it === '');
@@ -65,6 +66,7 @@
 						}))}
 						{pinModelHandler}
 						bind:value={selectedModel}
+						{placement}
 					/>
 				</div>
 			</div>
