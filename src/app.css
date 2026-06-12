@@ -839,3 +839,89 @@ body {
 #note-content-container .ProseMirror {
 	padding-bottom: 2rem; /* space for the bottom toolbar */
 }
+
+/* Custom premium ambient spotlight glow */
+@property --inner-size {
+	syntax: '<length-percentage>';
+	inherits: true;
+	initial-value: 0px;
+}
+@property --outer-size {
+	syntax: '<length-percentage>';
+	inherits: true;
+	initial-value: 0px;
+}
+
+:root {
+	--mouse-x: 50%;
+	--mouse-y: 50%;
+}
+
+.bg-radial-spotlight {
+	background: radial-gradient(
+		circle 800px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+		rgba(210, 225, 255, 0.2) 0%,
+		rgba(248, 250, 252, 0.98) 70%,
+		rgb(255, 255, 255) 100%
+	) !important;
+	transition: background 0.15s ease-out;
+}
+
+:global(.dark) .bg-radial-spotlight {
+	background: radial-gradient(
+		circle 800px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+		rgba(30, 41, 75, 0.25) 0%,
+		rgba(13, 14, 18, 0.98) 70%,
+		rgb(9, 10, 12) 100%
+	) !important;
+}
+
+/* Shimmering gradient welcome animation */
+@keyframes gradient-x {
+	0%, 100% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+}
+
+.animate-gradient-x {
+	background-size: 200% auto;
+	animation: gradient-x 8s ease infinite;
+}
+
+/* Glassmorphism panel styling */
+.glass-panel {
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+:global(.dark) .glass-panel {
+	background: rgba(13, 14, 18, 0.45);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Hide scrollbars but keep functionality */
+.scrollbar-none {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+	display: none;
+}
+
+/* Motion sensitivity overrides */
+@media (prefers-reduced-motion: reduce) {
+	.bg-radial-spotlight {
+		transition: none !important;
+	}
+	.animate-gradient-x {
+		animation: none !important;
+	}
+}
+

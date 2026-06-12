@@ -361,9 +361,21 @@
 			}
 		});
 
+		const handlePointerMove = (e: PointerEvent) => {
+			const mouseX = (e.clientX / window.innerWidth) * 100;
+			const mouseY = (e.clientY / window.innerHeight) * 100;
+			document.documentElement.style.setProperty('--mouse-x', `${mouseX}%`);
+			document.documentElement.style.setProperty('--mouse-y', `${mouseY}%`);
+		};
+		window.addEventListener('pointermove', handlePointerMove);
+
 		await tick();
 
 		loaded = true;
+
+		return () => {
+			window.removeEventListener('pointermove', handlePointerMove);
+		};
 	});
 
 	const checkForVersionUpdates = async () => {
@@ -394,7 +406,7 @@
 {#if $user}
 	<div class="app relative">
 		<div
-			class=" text-gray-700 dark:text-gray-100 bg-white dark:bg-gray-900 h-screen max-h-[100dvh] overflow-auto flex flex-row justify-end"
+			class=" text-gray-700 dark:text-gray-100 bg-white dark:bg-gray-900 bg-radial-spotlight h-screen max-h-[100dvh] overflow-auto flex flex-row justify-end relative"
 		>
 			{#if !['user', 'admin'].includes($user?.role)}
 				<AccountPending />

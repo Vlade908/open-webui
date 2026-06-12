@@ -72,6 +72,7 @@
 
 	import ToolServersModal from './ToolServersModal.svelte';
 	import SkillsModal from './SkillsModal.svelte';
+	import ModelSelector from './ModelSelector.svelte';
 
 	import RichTextInput from '../common/RichTextInput.svelte';
 	import Tooltip from '../common/Tooltip.svelte';
@@ -1293,11 +1294,68 @@
 							</div>
 						{/if}
 
+						<!-- Model and Skills Selector area -->
+						<div class="flex flex-col gap-2 w-full mb-2.5 px-1 font-primary text-left">
+							<!-- Top Controls Bar -->
+							<div class="flex items-center justify-between gap-3 flex-wrap">
+								<!-- Left: Model Selector -->
+								<div class="flex items-center gap-2 bg-white/5 dark:bg-[#0d0e12]/30 border border-gray-250/10 dark:border-gray-800/20 rounded-2xl px-2 py-0.5 backdrop-blur-md">
+									<ModelSelector bind:selectedModels showSetDefault={false} />
+								</div>
+								
+								<!-- Right: Manage Skills link -->
+								{#if $_user?.role === 'admin' || $_user?.permissions?.workspace?.skills}
+									<a
+										href="/workspace/skills"
+										class="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 font-semibold transition-colors"
+									>
+										{$i18n.t('Gerenciar Skills')}
+									</a>
+								{/if}
+							</div>
+
+							<!-- Bottom: Skills pills list -->
+							{#if $skills && $skills.length > 0}
+								<div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 w-full mask-gradient-r select-none">
+									{#each $skills as skill}
+										{#if skill.is_active}
+											<button
+												type="button"
+												class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border transition-all duration-300 backdrop-blur-md shrink-0 {selectedSkillIds.includes(skill.id) ? 'bg-blue-600/15 dark:bg-blue-500/15 text-blue-600 dark:text-blue-300 border-blue-500/30 shadow-[0_0_12px_rgba(59,130,246,0.15)]' : 'bg-white/5 dark:bg-gray-900/40 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-800/60 hover:bg-white/10 hover:dark:bg-gray-800/40'}"
+												on:click={() => {
+													if (selectedSkillIds.includes(skill.id)) {
+														selectedSkillIds = selectedSkillIds.filter(id => id !== skill.id);
+													} else {
+														selectedSkillIds = [...selectedSkillIds, skill.id];
+													}
+												}}
+											>
+												<span class="dot size-1.5 rounded-full {selectedSkillIds.includes(skill.id) ? 'bg-blue-500 dark:bg-blue-400 animate-pulse' : 'bg-gray-400 dark:bg-gray-650'}"></span>
+												{skill.name}
+											</button>
+										{/if}
+									{/each}
+									
+									{#if $_user?.role === 'admin' || $_user?.permissions?.workspace?.skills}
+										<a
+											href="/workspace/skills/create"
+											class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold border border-dashed border-gray-300 dark:border-gray-800 text-gray-400 dark:text-gray-500 hover:text-gray-650 dark:hover:text-gray-350 hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-200 shrink-0"
+										>
+											<svg class="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+											</svg>
+											Nova Skill
+										</a>
+									{/if}
+								</div>
+							{/if}
+						</div>
+
 						<div
 							id="message-input-container"
-							class="flex-1 flex flex-col relative w-full shadow-lg rounded-3xl border {$temporaryChatEnabled
-								? 'border-dashed border-gray-100 dark:border-gray-800 hover:border-gray-200 focus-within:border-gray-200 hover:dark:border-gray-700 focus-within:dark:border-gray-700'
-								: ' border-gray-100/30 dark:border-gray-850/30 hover:border-gray-200 focus-within:border-gray-100 hover:dark:border-gray-800 focus-within:dark:border-gray-800'}  transition px-1 bg-white/5 dark:bg-gray-500/5 backdrop-blur-sm dark:text-gray-100"
+							class="flex-1 flex flex-col relative w-full shadow-xl rounded-[28px] border {$temporaryChatEnabled
+								? 'border-dashed border-gray-200 dark:border-gray-850 hover:border-gray-305 focus-within:border-gray-305 hover:dark:border-gray-700 focus-within:dark:border-gray-700'
+								: 'border-gray-150/45 dark:border-gray-800/45'} glass-panel hover:shadow-2xl hover:border-gray-300 hover:dark:border-gray-700/80 transition-all duration-300 px-1 bg-white/10 dark:bg-[#0d0e12]/45 backdrop-blur-xl dark:text-gray-100"
 							dir={$settings?.chatDirection ?? 'auto'}
 						>
 							{#if atSelectedModel !== undefined}

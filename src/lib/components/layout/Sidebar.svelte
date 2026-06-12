@@ -74,6 +74,7 @@
 	import Code from '../icons/Code.svelte';
 	import { slide } from 'svelte/transition';
 	import HotkeyHint from '../common/HotkeyHint.svelte';
+	import UserAvatar from '../common/UserAvatar.svelte';
 
 	const BREAKPOINT = 768;
 	const DEFAULT_PINNED_ITEMS = ['notes', 'workspace'];
@@ -954,11 +955,11 @@
 								aria-label={$i18n.t('User menu')}
 							>
 								<div class="self-center relative">
-									<img
+									<UserAvatar
 										src={`${WEBUI_API_BASE_URL}/users/${$user?.id}/profile/image`}
-										class=" size-7 object-cover rounded-full"
-										alt={$i18n.t('Open User Profile Menu')}
-										aria-label={$i18n.t('Open User Profile Menu')}
+										name={$user?.name ?? ''}
+										size="size-7"
+										fontSize="0.65rem"
 									/>
 
 									{#if $config?.features?.enable_user_status}
@@ -1616,11 +1617,11 @@
 								aria-label={$i18n.t('User menu')}
 							>
 								<div class=" self-center mr-3 relative flex-shrink-0">
-									<img
+									<UserAvatar
 										src={`${WEBUI_API_BASE_URL}/users/${$user?.id}/profile/image`}
-										class=" size-7 object-cover rounded-full"
-										alt={$i18n.t('Open User Profile Menu')}
-										aria-label={$i18n.t('Open User Profile Menu')}
+										name={$user?.name ?? ''}
+										size="size-7"
+										fontSize="0.65rem"
 									/>
 
 									{#if $config?.features?.enable_user_status}

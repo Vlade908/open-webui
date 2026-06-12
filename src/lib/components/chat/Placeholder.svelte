@@ -107,9 +107,9 @@
 					}}
 				/>
 			{:else}
-				<div class="flex flex-row justify-center gap-2.5 @sm:gap-3 w-fit px-5 max-w-xl">
-					<div class="flex shrink-0 justify-center">
-						<div class="flex -space-x-4 mb-0.5" in:fade={{ duration: 100 }}>
+				<div class="flex flex-col items-center justify-center w-full px-5 max-w-3xl mx-auto my-4" in:fade={{ duration: 150 }}>
+					{#if models.length > 0}
+						<div class="flex -space-x-3 mb-4 shrink-0 justify-center">
 							{#each models as model, modelIdx}
 								<Tooltip
 									content={(models[modelIdx]?.info?.meta?.tags ?? [])
@@ -125,10 +125,11 @@
 										on:click={() => {
 											selectedModelIdx = modelIdx;
 										}}
+										class="relative hover:scale-105 transition-transform"
 									>
 										<img
 											src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${model?.id}&lang=${$i18n.language}`}
-											class=" size-9 @sm:size-10 rounded-full border-[1px] border-gray-100 dark:border-none"
+											class="size-10 rounded-full border-2 border-white dark:border-gray-900 shadow-md"
 											aria-hidden="true"
 											draggable="false"
 											on:error={(e) => {
@@ -139,26 +140,19 @@
 								</Tooltip>
 							{/each}
 						</div>
-					</div>
+					{/if}
 
-					<div
-						class=" text-3xl @sm:text-3xl line-clamp-1 flex items-center"
-						in:fade={{ duration: 100 }}
-					>
+					<!-- Gradient shimmering text -->
+					<h1 class="text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-[#4285F4] via-[#9B51E0] via-[#E91E63] to-[#4285F4] bg-clip-text text-transparent animate-gradient-x py-2 select-none font-primary leading-tight">
 						{#if models[selectedModelIdx]?.name}
-							<Tooltip
-								content={models[selectedModelIdx]?.name}
-								placement="top"
-								className=" flex items-center "
-							>
-								<span class="line-clamp-1">
-									{models[selectedModelIdx]?.name}
-								</span>
-							</Tooltip>
+							Olá, eu sou o {models[selectedModelIdx]?.name}
 						{:else}
-							{$i18n.t('Hello, {{name}}', { name: $user?.name })}
+							Olá, {$user?.name || 'Visitante'}
 						{/if}
-					</div>
+					</h1>
+					<h2 class="text-2xl sm:text-3xl font-semibold text-gray-400 dark:text-gray-500 mt-2 select-none font-primary">
+						Como posso ajudar você hoje?
+					</h2>
 				</div>
 
 				<div class="flex mt-1 mb-2">

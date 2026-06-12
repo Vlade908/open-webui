@@ -1,0 +1,1125 @@
+/* ==========================================================================
+   INOVIA AI PORTAL - CUSTOM THEME (SHADCN UI & GLASSMORPHISM AESTHETICS)
+   Replicating the premium React UI design on top of the Svelte Open WebUI
+   ========================================================================== */
+
+/* --- CSS Variables for Angle Rotation --- */
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+/* --- GLOBAL SCROLLBAR --- */
+::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+}
+::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-radius: 9999px !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* --- OVERRIDING THE ENTIRE BACKDROP (WITH PREMIUM SUBTLE PARALLAX) --- */
+body,
+html,
+.bg-radial-spotlight,
+.dark .bg-radial-spotlight,
+.bg-gray-50,
+.dark .bg-gray-900,
+.dark .bg-gray-950,
+.dark .bg-gray-850,
+.dark .bg-gray-800,
+div[class*="bg-slate-"],
+div[class*="bg-zinc-"] {
+    background-color: #030014 !important;
+    background-image: 
+        /* The grid mesh */
+        linear-gradient(to right, rgba(30, 41, 59, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.08) 1px, transparent 1px),
+        /* Subtle interactive parallax glow circles (uses Open WebUI mouse vars with offset for depth) */
+        radial-gradient(800px circle at calc(25% + (var(--mouse-x, 50%) - 50%) * 0.05) calc(25% + (var(--mouse-y, 50%) - 50%) * 0.05), rgba(99, 102, 241, 0.08), rgba(168, 85, 247, 0.04), transparent 70%),
+        radial-gradient(1000px circle at calc(75% + (var(--mouse-x, 50%) - 50%) * 0.08) calc(75% + (var(--mouse-y, 50%) - 50%) * 0.08), rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.02), transparent 70%) !important;
+    background-size: 5rem 5rem, 5rem 5rem, 100% 100%, 100% 100% !important;
+    background-attachment: fixed !important;
+    color: #f1f5f9 !important;
+    transition: background 0.15s ease-out !important;
+}
+
+/* --- SHADCN/GLASSMORPHISM SIDEBAR & MOUSE REACTIVE ITEMS --- */
+#sidebar,
+aside,
+.dark aside,
+.dark #sidebar,
+div[class*="sidebar-container"] {
+    background: rgba(3, 0, 20, 0.35) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    /* Distinct sidebar division with glowing violet border and shadow */
+    border-right: 1.5px solid rgba(139, 92, 246, 0.3) !important;
+    box-shadow: 6px 0 28px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Sidebar elements layout parallax (follows the mouse slightly) */
+#sidebar > div {
+    transform: translate(calc((var(--mouse-x, 50%) - 50%) * 0.04px), 0) !important;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Sidebar lists, links & buttons hover animations */
+#sidebar a,
+#sidebar button,
+aside a,
+aside button {
+    border-radius: 0.5rem !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#sidebar a:hover,
+#sidebar button:hover,
+aside a:hover,
+aside button:hover {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    color: #ffffff !important;
+    /* Translate items right on hover */
+    transform: translateX(3px) !important;
+    box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.06) !important;
+}
+
+/* --- COLLAPSED SIDEBAR INTERACTIONS & ANIMATIONS --- */
+#sidebar.px-2 {
+    background: rgba(3, 0, 20, 0.45) !important;
+    border-right: 1.5px solid rgba(139, 92, 246, 0.35) !important;
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.55) !important;
+    padding-inline: 0.65rem !important;
+    overflow: hidden !important; /* Ensure nothing breaks out of container */
+}
+
+#sidebar.px-2 button,
+#sidebar.px-2 a {
+    margin-bottom: 0.4rem !important;
+    border-radius: 0.75rem !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    border: 1px solid transparent !important;
+}
+
+#sidebar.px-2 button:hover,
+#sidebar.px-2 a:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.18) 0%, rgba(99, 102, 241, 0.18) 100%) !important;
+    border-color: rgba(168, 85, 247, 0.35) !important;
+    color: #ffffff !important;
+    transform: translate(0, 0) scale(1) !important; /* Strictly override global translateX/scale to keep it within bounds */
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.35),
+        0 0 6px rgba(139, 92, 246, 0.2) !important;
+}
+
+#sidebar.px-2 button:hover svg,
+#sidebar.px-2 a:hover svg,
+#sidebar.px-2 button:hover img,
+#sidebar.px-2 a:hover img {
+    transform: scale(1.05) !important; /* Safe inner-scale that doesn't overflow screen */
+    filter: drop-shadow(0 0 3px rgba(168, 85, 247, 0.4)) !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+#sidebar.px-2 .sidebar-new-chat-icon {
+    transition: transform 0.4s ease !important;
+}
+
+#sidebar.px-2 button:hover .sidebar-new-chat-icon {
+    transform: rotate(360deg) scale(0.9) !important;
+}
+
+/* Collapsed Profile Button Pop */
+#sidebar.px-2 div.py-2 button {
+    background: rgba(168, 85, 247, 0.12) !important;
+    border: 1px solid rgba(168, 85, 247, 0.35) !important;
+    border-radius: 50% !important;
+    padding: 3px !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.4),
+        0 0 10px rgba(168, 85, 247, 0.15) !important;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+#sidebar.px-2 div.py-2 button:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%) !important;
+    border-color: rgba(168, 85, 247, 0.6) !important;
+    transform: scale(1.05) !important; /* Safe inner-scale that doesn't overflow screen */
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.45),
+        0 0 12px rgba(168, 85, 247, 0.35) !important;
+}
+
+#sidebar.px-2 div.py-2 button span.bg-green-500 {
+    animation: status-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.8) !important;
+}
+
+@keyframes status-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(0.9);
+    }
+}
+
+/* --- HIGHLIGHTED USER PROFILE SECTION AT BOTTOM OF SIDEBAR --- */
+.sticky.bottom-0.sidebar button,
+#sidebar .sticky.bottom-0 button,
+div[class*="sidebar"] .sticky.bottom-0 button {
+    background: rgba(139, 92, 246, 0.08) !important;
+    border: 1px solid rgba(139, 92, 246, 0.25) !important;
+    border-radius: 0.85rem !important;
+    padding: 0.5rem 0.75rem !important;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.35),
+        inset 0 0 10px rgba(139, 92, 246, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    margin-block: 0.4rem !important;
+    display: flex !important;
+}
+
+.sticky.bottom-0.sidebar button:hover,
+#sidebar .sticky.bottom-0 button:hover,
+div[class*="sidebar"] .sticky.bottom-0 button:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%) !important;
+    border-color: rgba(168, 85, 247, 0.55) !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(168, 85, 247, 0.3),
+        inset 0 0 12px rgba(255, 255, 255, 0.05) !important;
+    transform: scale(1.04) translateY(-1px) !important;
+}
+
+/* --- SHADCN/GLASSMORPHISM HEADER --- */
+header,
+.dark header,
+div[class*="header"] {
+    background: rgba(3, 0, 20, 0.2) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+/* --- CHAT AREA BALLOONS --- */
+/* User message bubble (Clean purple-indigo gradient) */
+.dark div[dir="ltr"].bg-gray-100,
+.dark div[class*="message-user"],
+div[class*="chat-item"] div[class*="user"] {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.95) 0%, rgba(99, 102, 241, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15) !important;
+    border-radius: 1.25rem 1.25rem 0.25rem 1.25rem !important;
+}
+
+/* AI/Assistant message bubble (Modern glassmorphic container) */
+.dark div[class*="message-assistant"],
+.dark div[class*="message-bot"],
+div[class*="chat-item"] div[class*="assistant"] {
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+    border-radius: 1.25rem 1.25rem 1.25rem 0.25rem !important;
+    padding: 1rem 1.25rem !important;
+}
+
+/* --- GLASSMORPHISM CHAT INPUT WITH ROTATING NEON BORDER AND OUTWARD RGB GLOW --- */
+#message-input-container,
+form[class*="prompt"],
+div[class*="message-input-container"],
+div[class*="input-container"] {
+    position: relative !important;
+    background: rgba(13, 14, 18, 0.45) !important;
+    backdrop-filter: blur(28px) !important;
+    -webkit-backdrop-filter: blur(28px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+    border-radius: 1.75rem !important;
+    padding: 0.5rem 0.75rem !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+    overflow: visible !important;
+    z-index: 10 !important;
+}
+
+/* 1. Rotating Neon Border Outline */
+#message-input-container::before,
+form[class*="prompt"]::before,
+div[class*="message-input-container"]::before,
+div[class*="input-container"]::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: -1.5px !important;
+    border-radius: 1.85rem !important;
+    padding: 1.5px !important;
+    background: conic-gradient(from var(--angle), #3b82f6, #8b5cf6, #ec4899, #00f5ff, #3b82f6) !important;
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+    animation: rotate-border 6s linear infinite !important;
+    opacity: 0.6 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+/* 2. Hollow Rotating RGB Glow Shadow */
+#message-input-container::after,
+form[class*="prompt"]::after,
+div[class*="message-input-container"]::after,
+div[class*="input-container"]::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: -3px !important;
+    border-radius: 1.85rem !important;
+    padding: 3px !important;
+    background: conic-gradient(from var(--angle), #3b82f6, #8b5cf6, #ec4899, #00f5ff, #3b82f6) !important;
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    z-index: -2 !important;
+    animation: rotate-border 6s linear infinite !important;
+    filter: blur(8px) !important;
+    opacity: 0.45 !important;
+    transition: opacity 0.3s ease, filter 0.3s ease !important;
+    display: block !important;
+}
+
+#message-input-container:focus-within::before,
+form[class*="prompt"]:focus-within::before,
+div[class*="message-input-container"]:focus-within::before,
+div[class*="input-container"]:focus-within::before {
+    opacity: 0.95 !important;
+}
+
+#message-input-container:focus-within::after,
+form[class*="prompt"]:focus-within::after,
+div[class*="message-input-container"]:focus-within::after,
+div[class*="input-container"]:focus-within::after {
+    opacity: 0.85 !important;
+    filter: blur(12px) !important;
+}
+
+@keyframes rotate-border {
+    to {
+        --angle: 360deg;
+    }
+}
+
+textarea#chat-textarea,
+textarea[class*="chat-input"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #f1f5f9 !important;
+    font-size: 0.875rem !important;
+}
+
+/* --- PREMIUM MODEL SELECTOR & SELECTOR DROPDOWN --- */
+div[class*="bg-white/5"] > select,
+div[class*="bg-white/5"] button[id*="model-selector-"],
+div[class*="bg-white/5"] button[id*="model-selector-"] div {
+    color: #c084fc !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.025em !important;
+}
+
+div[class*="bg-white/5"].backdrop-blur-md,
+div[class*="bg-[#0d0e12]/30"].backdrop-blur-md {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.2s ease !important;
+}
+
+div[class*="bg-white/5"].backdrop-blur-md:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(168, 85, 247, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.1) !important;
+}
+
+/* --- GLASSMORPHISM DROPDOWNS & PROFILE POPUPS WITH DYNAMIC PARALLAX & TILT --- */
+div.z-40.bg-white,
+div.z-40.dark\:bg-gray-850,
+div.z-50.bg-white,
+div.z-50.dark\:bg-gray-850 {
+    background: rgba(8, 6, 20, 0.82) !important;
+    backdrop-filter: blur(32px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-radius: 1.25rem !important;
+    box-shadow: 
+        0 15px 45px rgba(0, 0, 0, 0.6), 
+        0 0 25px rgba(139, 92, 246, 0.08) !important;
+    color: #f1f5f9 !important;
+    padding: 0.5rem !important;
+    transform: translate(calc((var(--mouse-x, 50%) - 50%) * 0.15px), calc((var(--mouse-y, 50%) - 50%) * 0.15px)) !important;
+    transition: 
+        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+        box-shadow 0.25s ease, 
+        border-color 0.25s ease !important;
+}
+
+/* Hover over Popups / Dropdown box */
+div.z-40.bg-white:hover,
+div.z-40.dark\:bg-gray-850:hover,
+div.z-50.bg-white:hover,
+div.z-50.dark\:bg-gray-850:hover {
+    border-color: rgba(168, 85, 247, 0.25) !important;
+    transform: translate(calc((var(--mouse-x, 50%) - 50%) * 0.15px), calc((var(--mouse-y, 50%) - 50%) * 0.15px)) scale(1.01) !important;
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.7), 
+        0 0 35px rgba(139, 92, 246, 0.15) !important;
+}
+
+/* User status / profile box inside menu */
+div.z-50.dark\:bg-gray-850 div[class*="flex"] {
+    color: #ffffff !important;
+}
+
+/* Dropdown list items inside popups */
+div.z-40.bg-white button,
+div.z-40.bg-white a,
+div.z-40.dark\:bg-gray-850 button,
+div.z-40.dark\:bg-gray-850 a,
+div.z-50.bg-white button,
+div.z-50.bg-white a,
+div.z-50.dark\:bg-gray-850 button,
+div.z-50.dark\:bg-gray-850 a,
+div.z-40 div[role="option"] {
+    border-radius: 0.75rem !important;
+    margin-block: 2.5px !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+div.z-40.bg-white button:hover,
+div.z-40.bg-white a:hover,
+div.z-40.dark\:bg-gray-850 button:hover,
+div.z-40.dark\:bg-gray-850 a:hover,
+div.z-50.bg-white button:hover,
+div.z-50.bg-white a:hover,
+div.z-50.dark\:bg-gray-850 button:hover,
+div.z-50.dark\:bg-gray-850 a:hover,
+div.z-40 div[role="option"]:hover {
+    background: rgba(139, 92, 246, 0.18) !important;
+    color: #ffffff !important;
+    padding-left: 0.85rem !important;
+}
+
+/* Dropdown separation line */
+div.z-50 hr,
+div.z-40 hr {
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    margin-block: 6px !important;
+}
+
+/* "Atualize seu status" status button */
+div.z-50 button[class*="bg-gray-50"],
+div.z-50 button[class*="dark:bg-gray-900"] {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 0.75rem !important;
+    color: #c084fc !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+div.z-50 button[class*="bg-gray-50"]:hover,
+div.z-50 button[class*="dark:bg-gray-900"]:hover {
+    background: rgba(168, 85, 247, 0.15) !important;
+    border-color: rgba(168, 85, 247, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* Search Input inside Model Selector Dropdown */
+#model-search-input {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0.75rem !important;
+    padding: 0.4rem 0.75rem !important;
+    color: #ffffff !important;
+    font-size: 0.825rem !important;
+    transition: all 0.2s ease !important;
+}
+
+#model-search-input:focus {
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2) !important;
+}
+
+/* --- THE SKILLS MANAGER & SKILLS PILLS --- */
+div[class*="mask-gradient-r"] {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+}
+
+/* Skills Pills (Standard State) */
+div[class*="mask-gradient-r"] button {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: #94a3b8 !important;
+    font-weight: 500 !important;
+    border-radius: 9999px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+div[class*="mask-gradient-r"] button:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Skills Pills (Active/Selected State) */
+div[class*="mask-gradient-r"] button[class*="bg-blue-65px"],
+div[class*="mask-gradient-r"] button[class*="text-blue-"],
+div[class*="mask-gradient-r"] button.bg-blue-600\/15,
+div[class*="mask-gradient-r"] button.dark\:bg-blue-500\/15 {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(99, 102, 241, 0.15) 100%) !important;
+    border: 1px solid rgba(168, 85, 247, 0.3) !important;
+    color: #e9d5ff !important;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.12) !important;
+}
+
+div[class*="mask-gradient-r"] button[class*="bg-blue-"]:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%) !important;
+    border-color: rgba(168, 85, 247, 0.4) !important;
+}
+
+/* Skill active pulsing dot */
+div[class*="mask-gradient-r"] button span.dot {
+    width: 6px !important;
+    height: 6px !important;
+}
+div[class*="mask-gradient-r"] button span.dot.bg-blue-500 {
+    background-color: #c084fc !important;
+    box-shadow: 0 0 8px #c084fc !important;
+}
+
+/* "Gerenciar Skills" Link & "Nova Skill" Button */
+a[href*="/skills"],
+a[href*="/skills/create"] {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px dashed rgba(255, 255, 255, 0.15) !important;
+    border-radius: 9999px !important;
+    padding: 0.25rem 0.75rem !important;
+    color: #c084fc !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+a[href*="/skills"]:hover,
+a[href*="/skills/create"]:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(168, 85, 247, 0.4) !important;
+    border-style: solid !important;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.15) !important;
+    color: #e9d5ff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* --- WELCOME HEADLINES --- */
+.animate-gradient-x {
+    background: linear-gradient(to right, #a78bfa, #f472b6, #60a5fa, #a78bfa) !important;
+    background-size: 200% auto !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    animation: gradient-flow 6s linear infinite !important;
+}
+
+@keyframes gradient-flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* --- SELECTED CHAT CARD STYLING & TEXT MARQUEE ON HOVER --- */
+#sidebar-chat-item.selected {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.16) 0%, rgba(99, 102, 241, 0.16) 100%) !important;
+    border: 1.5px solid rgba(139, 92, 246, 0.35) !important;
+    box-shadow: 
+        0 4px 14px rgba(0, 0, 0, 0.3),
+        inset 0 0 12px rgba(139, 92, 246, 0.1) !important;
+}
+
+#sidebar-chat-item.selected div[dir="auto"],
+#sidebar-chat-item.selected div {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 0 8px rgba(139, 92, 246, 0.4) !important;
+}
+
+#sidebar-chat-group {
+    overflow: hidden !important;
+}
+
+#sidebar-chat-item {
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    padding-right: 48px !important; /* Pad right to prevent text/time overlapping the absolutely positioned menu! */
+    transition: background-color 0.2s, border-color 0.2s !important;
+}
+
+#sidebar-chat-item div[dir="auto"] {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+/* Smooth marquee scroll on hover if the text overflows */
+#sidebar-chat-group:hover #sidebar-chat-item div[dir="auto"] {
+    display: inline-block !important;
+    width: max-content !important;
+    text-overflow: clip !important;
+    overflow: visible !important;
+    animation: marquee-hover 7s linear infinite alternate !important;
+}
+
+@keyframes marquee-hover {
+    0% {
+        transform: translateX(0);
+    }
+    18% {
+        transform: translateX(0);
+    }
+    82% {
+        transform: translateX(min(0px, calc(-100% + 120px)));
+    }
+    100% {
+        transform: translateX(min(0px, calc(-100% + 120px)));
+    }
+}
+
+/* Time indication style */
+#sidebar-chat-item div.shrink-0.text-\[10px\] {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    padding: 1px 5px !important;
+    border-radius: 4px !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-weight: 500 !important;
+    margin-left: 6px !important;
+    font-family: monospace !important;
+}
+
+#sidebar-chat-item.selected div.shrink-0.text-\[10px\] {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* Overriding the three dots menu background color/gradient to blend seamlessly */
+#sidebar-chat-item-menu {
+    background-image: linear-gradient(to left, rgba(13, 11, 32, 0.95) 60%, transparent) !important;
+    border-radius: 0 0.75rem 0.75rem 0 !important;
+    height: calc(100% - 8px) !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+#sidebar-chat-item-menu.selected {
+    background-image: linear-gradient(to left, rgba(28, 22, 57, 0.95) 65%, transparent) !important;
+}
+
+#sidebar-chat-item-menu button {
+    color: rgba(255, 255, 255, 0.5) !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+#sidebar-chat-item-menu button:hover {
+    color: #ffffff !important;
+    transform: scale(1.15) !important;
+}
+
+/* --- PREMIUM CONFIRM/DELETE DIALOG GLASSMORPHISM --- */
+div[class*="z-99999999"] {
+    background: rgba(2, 1, 10, 0.45) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+}
+
+div[class*="z-99999999"] > div {
+    background: rgba(10, 8, 26, 0.9) !important;
+    backdrop-filter: blur(28px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.25) !important;
+    border-radius: 1.75rem !important;
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.7),
+        0 0 30px rgba(139, 92, 246, 0.15) !important;
+}
+
+div[class*="z-99999999"] .text-lg {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+    letter-spacing: -0.02em !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding-bottom: 0.75rem !important;
+    margin-bottom: 1rem !important;
+}
+
+div[class*="z-99999999"] .text-sm.text-gray-500 {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 0.925rem !important;
+    line-height: 1.5 !important;
+}
+
+div[class*="z-99999999"] span.font-semibold {
+    color: #f43f5e !important;
+    font-weight: 600 !important;
+}
+
+/* Cancel Button */
+div[class*="z-99999999"] .mt-6 button:first-child {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 0.85rem !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    font-weight: 600 !important;
+}
+
+div[class*="z-99999999"] .mt-6 button:first-child:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Confirm/Delete Button (Red/Violet Neon Danger Gradient) */
+div[class*="z-99999999"] .mt-6 button:last-child {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%) !important;
+    border: 1px solid rgba(239, 68, 68, 0.45) !important;
+    color: #fecdd3 !important;
+    border-radius: 0.85rem !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1) !important;
+}
+
+div[class*="z-99999999"] .mt-6 button:last-child:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.35) 0%, rgba(139, 92, 246, 0.35) 100%) !important;
+    border-color: rgba(239, 68, 68, 0.65) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 
+        0 6px 16px rgba(239, 68, 68, 0.25),
+        0 0 12px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* --- PREMIUM WORKSPACE STYLING (SKILLS, PROMPTS, KNOWLEDGE, MODELS, TOOLS) --- */
+#workspace-container {
+    padding-bottom: 2.5rem !important;
+}
+
+/* Tabs Navigation Menu */
+nav.drag-region div.flex.gap-1 {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 9999px !important;
+    padding: 0.25rem !important;
+    margin-block: 0.5rem !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+nav.drag-region a[aria-current="page"] {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.22) 0%, rgba(99, 102, 241, 0.22) 100%) !important;
+    border: 1px solid rgba(168, 85, 247, 0.35) !important;
+    color: #ffffff !important;
+    border-radius: 9999px !important;
+    padding: 0.45rem 1rem !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.25),
+        0 0 10px rgba(168, 85, 247, 0.15) !important;
+    font-weight: 600 !important;
+}
+
+nav.drag-region a:not([aria-current="page"]) {
+    padding: 0.45rem 1rem !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    border-radius: 9999px !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+nav.drag-region a:not([aria-current="page"]):hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+    color: #ffffff !important;
+}
+
+/* Main Workspace Card Box */
+#workspace-container div.py-2.bg-white,
+#workspace-container div.py-2.dark\:bg-gray-900,
+#workspace-container div.py-2 {
+    background-image: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.05), rgba(99, 102, 241, 0.01) 40%, transparent 70%) !important;
+    background-color: rgba(3, 0, 20, 0.45) !important;
+    background-attachment: fixed !important; /* Spotlight aligns perfectly with viewport cursor position */
+    backdrop-filter: blur(28px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+    border: 1.5px solid rgba(139, 92, 246, 0.22) !important;
+    border-radius: 1.75rem !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.55) !important;
+    margin-top: 1rem !important;
+    padding: 1.5rem 1.25rem !important;
+    transition: border-color 0.3s ease !important;
+}
+
+/* Search bar & query inputs inside workspace cards */
+#workspace-container div.flex.w-full.space-x-2 {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 0.85rem !important;
+    padding: 0.45rem 0.75rem !important;
+    margin-bottom: 0.75rem !important;
+    transition: all 0.25s ease !important;
+}
+
+#workspace-container div.flex.w-full.space-x-2:focus-within {
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.15) !important;
+}
+
+/* Top bar Action buttons ("Importar", "Exportar", "Nova Skill") */
+#workspace-container div.flex.justify-end.gap-1\.5 button,
+#workspace-container div.flex.justify-end.gap-1\.5 a {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0.75rem !important;
+    padding: 0.45rem 0.85rem !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 600 !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#workspace-container div.flex.justify-end.gap-1\.5 button:hover,
+#workspace-container div.flex.justify-end.gap-1\.5 a:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Make "+ Nova/o" buttons stand out with purple gradient */
+#workspace-container div.flex.justify-end.gap-1\.5 a[href*="/create"],
+#workspace-container div.flex.justify-end.gap-1\.5 button[on\:click*="create"] {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%) !important;
+    border: 1px solid rgba(168, 85, 247, 0.45) !important;
+    color: #e9d5ff !important;
+}
+
+#workspace-container div.flex.justify-end.gap-1\.5 a[href*="/create"]:hover,
+#workspace-container div.flex.justify-end.gap-1\.5 button[on\:click*="create"]:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.35) 0%, rgba(99, 102, 241, 0.35) 100%) !important;
+    border-color: rgba(168, 85, 247, 0.6) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.25) !important;
+}
+
+/* Individual list item cards (Grid items) */
+#workspace-container div.grid > div,
+#workspace-container div.grid > a,
+#workspace-container div[class*="space-x-4"].transition {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+    border-radius: 1.15rem !important;
+    padding: 0.85rem 1rem !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#workspace-container div.grid > div:hover,
+#workspace-container div.grid > a:hover,
+#workspace-container div[class*="space-x-4"].transition:hover {
+    background-image: radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(168, 85, 247, 0.1), transparent 70%) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    background-attachment: fixed !important;
+    border-color: rgba(139, 92, 246, 0.35) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 10px 24px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(139, 92, 246, 0.15) !important;
+}
+
+/* Community sharing cards at bottom */
+#workspace-container a[href*="openwebui.com"] {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+    border-radius: 1.15rem !important;
+    padding: 1rem 1.25rem !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#workspace-container a[href*="openwebui.com"]:hover {
+    background-image: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(168, 85, 247, 0.12), transparent 70%) !important;
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    background-attachment: fixed !important;
+    border-color: rgba(139, 92, 246, 0.35) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 10px 24px rgba(0, 0, 0, 0.4),
+        0 0 15px rgba(139, 92, 246, 0.15) !important;
+}
+
+#workspace-container a[href*="openwebui.com"] div.font-medium {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+#workspace-container a[href*="openwebui.com"] div.text-sm {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ==========================================================================
+   CODE BLOCKS & BASH — NEON RGB GLOW + GLASSMORPHISM
+   Matching the chat input rotating border aesthetic
+   ========================================================================== */
+
+/* --- CODE BLOCK OUTER WRAPPER (rotating neon border) --- */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl {
+    position: relative !important;
+    background: rgba(6, 4, 16, 0.85) !important;
+    border: 1px solid rgba(139, 92, 246, 0.15) !important;
+    border-radius: 1rem !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.55),
+        0 0 1px rgba(139, 92, 246, 0.25) !important;
+    overflow: visible !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl:hover {
+    border-color: rgba(139, 92, 246, 0.3) !important;
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.65),
+        0 0 18px rgba(139, 92, 246, 0.12) !important;
+}
+
+/* 1. Rotating Neon Border (same as chat input) */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: -1.5px !important;
+    border-radius: calc(1rem + 1.5px) !important;
+    padding: 1.5px !important;
+    background: conic-gradient(from var(--angle), #3b82f6, #8b5cf6, #ec4899, #00f5ff, #3b82f6) !important;
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+    animation: rotate-border 6s linear infinite !important;
+    opacity: 0.35 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+/* 2. Outer Glow Shadow (same as chat input) */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: -3px !important;
+    border-radius: calc(1rem + 3px) !important;
+    padding: 3px !important;
+    background: conic-gradient(from var(--angle), #3b82f6, #8b5cf6, #ec4899, #00f5ff, #3b82f6) !important;
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0) !important;
+    -webkit-mask-composite: xor !important;
+    mask-composite: exclude !important;
+    pointer-events: none !important;
+    z-index: -2 !important;
+    animation: rotate-border 6s linear infinite !important;
+    filter: blur(6px) !important;
+    opacity: 0.2 !important;
+    transition: opacity 0.3s ease, filter 0.3s ease !important;
+}
+
+/* Intensify glow on hover */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl:hover::before {
+    opacity: 0.6 !important;
+}
+
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl:hover::after {
+    opacity: 0.4 !important;
+    filter: blur(10px) !important;
+}
+
+/* --- CODE BLOCK HEADER BAR (language label + buttons) --- */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl > div.sticky {
+    background: linear-gradient(135deg, rgba(10, 8, 24, 0.95) 0%, rgba(16, 12, 32, 0.95) 100%) !important;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.12) !important;
+    border-radius: 1rem 1rem 0 0 !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(12px) !important;
+}
+
+/* Language label text */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl > div.sticky span.truncate {
+    color: #c084fc !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.03em !important;
+    text-transform: uppercase !important;
+    font-size: 0.7rem !important;
+}
+
+/* Header buttons (Collapse, Run, Copy, Save) */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl > div.sticky button {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 0.5rem !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    padding: 0.2rem 0.55rem !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl > div.sticky button:hover {
+    background: rgba(139, 92, 246, 0.15) !important;
+    border-color: rgba(139, 92, 246, 0.35) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.2) !important;
+}
+
+/* --- CODE CONTENT AREA (the actual code) --- */
+.dark .markdown-prose pre.hljs,
+.dark .markdown-prose pre[class*="language-"] {
+    background: rgba(6, 4, 16, 0.9) !important;
+    color: #e2e8f0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    font-size: 0.82rem !important;
+    line-height: 1.65 !important;
+}
+
+/* bg-white dark:bg-black spacer div above code */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl div.bg-white.dark\:bg-black,
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl div[class*="bg-white"][class*="dark:bg-black"] {
+    background: rgba(6, 4, 16, 0.9) !important;
+}
+
+/* CodeEditor wrapper (Monaco editor) */
+.dark .markdown-prose .cm-editor,
+.dark .markdown-prose div[class*="cm-"] {
+    background: rgba(6, 4, 16, 0.9) !important;
+}
+
+/* --- OUTPUT / RESULT AREA --- */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl div.bg-gray-50.dark\:bg-black,
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl div[class*="bg-gray-50"][class*="dark:bg-black"] {
+    background: rgba(8, 6, 20, 0.85) !important;
+    border-top: 1px solid rgba(139, 92, 246, 0.08) !important;
+}
+
+/* STDOUT/STDERR and RESULT labels */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl .text-gray-500.text-xs {
+    color: #a78bfa !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    font-weight: 600 !important;
+    font-size: 0.65rem !important;
+}
+
+/* Output text */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl .text-sm.font-mono {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Collapsed state text */
+.dark .markdown-prose div > div.relative.flex.flex-col.rounded-2xl span.text-gray-500.italic {
+    color: rgba(168, 85, 247, 0.5) !important;
+}
+
+/* --- INLINE CODE SPANS (backtick `code`) --- */
+.dark .markdown-prose code.codespan,
+.dark .markdown-prose :not(pre) > code {
+    background: rgba(139, 92, 246, 0.12) !important;
+    border: 1px solid rgba(139, 92, 246, 0.25) !important;
+    border-radius: 0.4rem !important;
+    padding: 0.15rem 0.45rem !important;
+    color: #e9d5ff !important;
+    font-size: 0.85em !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 0 4px rgba(139, 92, 246, 0.08) !important;
+}
+
+.dark .markdown-prose code.codespan:hover,
+.dark .markdown-prose :not(pre) > code:hover {
+    background: rgba(139, 92, 246, 0.2) !important;
+    border-color: rgba(139, 92, 246, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2) !important;
+}
+
+/* --- CODE EXECUTION BUTTONS (in-message "Analisei" accordion) --- */
+.dark .code-execution-name {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* hljs token color enhancements for darker bg */
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-type {
+    color: #c084fc !important;
+}
+
+.dark .hljs-string,
+.dark .hljs-attr {
+    color: #86efac !important;
+}
+
+.dark .hljs-number,
+.dark .hljs-literal {
+    color: #fbbf24 !important;
+}
+
+.dark .hljs-comment,
+.dark .hljs-quote {
+    color: rgba(255, 255, 255, 0.3) !important;
+    font-style: italic !important;
+}
+
+.dark .hljs-function .hljs-title,
+.dark .hljs-title.function_ {
+    color: #93c5fd !important;
+}
+
+.dark .hljs-built_in {
+    color: #67e8f9 !important;
+}
+
+.dark .hljs-variable,
+.dark .hljs-template-variable {
+    color: #f0abfc !important;
+}
+
+.dark .hljs-params {
+    color: #fdba74 !important;
+}
